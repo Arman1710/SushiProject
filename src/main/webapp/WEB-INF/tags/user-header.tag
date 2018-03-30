@@ -12,21 +12,23 @@
 <fmt:setBundle basename="locale"/>
 <header class="header">
     <div class="infoRow">
-        <div class="description">
-            <a href="user-index.jsp" class="sushiName">
-                <fmt:message key="header.mainMenu"/>
-            </a>
-            <div class="telNumber">
-                <fmt:message key="header.tel"/>
+        <div class="indexPageDiv">
+            <div class="headerBtnDiv">
+                <form action="Controller" method="post">
+                    <input type="hidden" name="action" value="user-indexPage"/>
+                    <button class="headerBtn" type="submit">
+                        <fmt:message key="header.mainMenu"/>
+                    </button>
+                </form>
             </div>
         </div>
 
-        <div class="basket-login-block">
-            <div class="guestMesg">
-                <fmt:message key="header.welcome"/> <br>
-                ${user.login}
-            </div>
+        <div class="guestMesg">
+            <fmt:message key="header.welcome"/> <br>
+            ${login}
+        </div>
 
+        <div class="basket-login-block">
             <div class="logReg-index">
                 <form action="Controller" method="post">
                     <input type="hidden" name="action" value="logout"/>
@@ -35,30 +37,37 @@
                     </button>
                 </form>
             </div>
-
             <div class="basket-block">
                 <div class="basket-icon">
                 </div>
                 <div class="total">
                     <c:out value="${totalCost}" default="0"/> <fmt:message key="tenge"/>
                 </div>
-                <a class="orders-bottom" href="basket.jsp" >
-                    <fmt:message key="header.basket"/>
-                </a>
+                <form action="Controller" method="post">
+                    <input type="hidden" name="action" value="basketPage"/>
+                    <button class="headerBtn" type="submit">
+                        <fmt:message key="header.basket"/>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
     <div class="menuRow">
-        <div class="product-menuRow">
-            <div class="product-menuRow">
-                <a href="user-rolls.jsp" class="rolls-menuRow">
+        <div class="headerBtnDiv">
+            <form action="Controller" method="post">
+                <input type="hidden" name="action" value="user-rollsPage"/>
+                <button class="headerBtn" type="submit">
                     <fmt:message key="header.rolls"/>
-                </a>
-                <a href="user-sets.jsp" class="sets-menuRow">
-                    <fmt:message key="header.sets"/>
-                </a>
+                </button>
+            </form>
         </div>
-        <link type= "text/css" rel="stylesheet" href="../assets/css/style.css"/>
-    </div>
+        <div class="headerBtnDiv">
+            <form action="Controller" method="post">
+                <input type="hidden" name="action" value="user-setsPage"/>
+                <button class="headerBtn" type="submit">
+                    <fmt:message key="header.sets"/>
+                </button>
+            </form>
+        </div>
     </div>
 </header>

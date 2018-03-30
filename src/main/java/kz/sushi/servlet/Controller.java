@@ -1,8 +1,10 @@
 package kz.sushi.servlet;
 
+import kz.sushi.action.ActionFactory;
 import kz.sushi.action.IBasicAction;
 import kz.sushi.action.impl.*;
 
+import kz.sushi.dao.IBasic;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 
 public class Controller extends HttpServlet  {
@@ -23,27 +26,8 @@ public class Controller extends HttpServlet  {
             log.error(e);
         }
         String parameter = request.getParameter("action");
-        IBasicAction action = null;
-        switch (parameter) {
-            case "changeLocale": action = new LocaleAction();
-            break;
-            case "productAdd": action = new ProductAdd();
-            break;
-            case "productRemove": action = new ProductRemove();
-            break;
-            case "registration" : action = new RegistrationAction();
-            break;
-            case "logout" : action = new LogoutAction();
-            break;
-            case "login" : action = new LoginAction();
-            break;
-            case "checkout" : action = new Checkout();
-            break;
-            case "showAllOrders" : action = new ShowAllOrders();
-            break;
-            case "loginLikeGuest" : action = new LoginLikeGuest();
-            break;
-        }
+        Map<String, IBasicAction> actionMap = ActionFactory.actionMap;
+        IBasicAction action = actionMap.get(parameter);
         String path = action.execute(request);
         RequestDispatcher dispatcher = request.getRequestDispatcher(path);
         dispatcher.forward(request, response);

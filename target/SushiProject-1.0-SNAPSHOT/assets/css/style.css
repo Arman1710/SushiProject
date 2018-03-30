@@ -213,9 +213,15 @@ a {
 .logout-button {
     font-family: Poppins-Medium, serif;
     font-size: 20px;
-    color: #FD7F33;
-    border: none;
+    background: none;
     margin-top: 10px;
+    border: none;
+    width: 80px;
+}
+
+.logout-button:hover {
+    background: #F26E21;
+    color: #ffe;
 }
 
 .textReg {
@@ -254,7 +260,7 @@ a {
     font-size: 20px;
 }
 
-.description {
+.indexPageDiv {
     float: left;
     width: 40%;
 }
@@ -268,20 +274,14 @@ a {
 
 }
 
-.telNumber {
-    margin-top: 15px;
-    float: right;
-    color: #FD7F33;
-}
 
 .basket-login-block {
     float: right;
-    width: 55%;
+    margin-right: 30px;
 }
 
 .logReg-index {
     float: right;
-    margin-right: 5%;
     text-align: center;
 }
 
@@ -334,6 +334,7 @@ a {
     background-color:#FFFFFF;
     opacity: 0.9;    
     text-align: center;
+    width: 100%;
 }
 
 .menuRow a {
@@ -354,13 +355,14 @@ a {
 }
 
 .product-menuRow {
-    padding-top: 5px; 
+    padding-top: 5px;
+    display: flex;
 }
 
 .index-picture {
     width: 100%;
     height: 200px;
-    margin-top: 100px;
+    margin-top: 110px;
 }
 
 .index-picture>a>img {
@@ -496,6 +498,14 @@ table, th, td {
     font-size: 18px;
     margin: 10px;
 }
+
+.hideOrders {
+     float: left;
+     border: none;
+     font-size: 18px;
+     margin: 10px;
+ }
+
 .success {
     margin-top: 20px;
 }
@@ -505,3 +515,44 @@ table, th, td {
     float: left;
     color: #FD7F33;
 }
+
+.logRegBtn {
+    font-family: Poppins-Medium, serif;
+    background-color: #fff;
+    margin: 10px;
+    font-size: 15px;
+    border-radius: 250px;
+    min-width: 200px;
+    height: 30px;
+    border: none;
+}
+
+.logRegBtn:hover {
+    color: #fff;
+    background: -webkit-linear-gradient(bottom, #7579ff, #b224ef);
+    background: -o-linear-gradient(bottom, #7579ff, #b224ef);
+    background: -moz-linear-gradient(bottom, #7579ff, #b224ef);
+    background: linear-gradient(bottom, #7579ff, #b224ef);
+}
+
+.headerBtn {
+    font-family: Poppins-Medium, serif;
+    border: none;
+    font-size: 20px;
+    min-width: 100px;
+    display: inline-block;
+    background: none;
+
+}
+
+.headerBtn:hover {
+    background: #F26E21;
+    color: #ffe;
+}
+
+.headerBtnDiv {
+    width: 150px;
+    display: inline-block;
+    margin-top: 10px;
+}
+

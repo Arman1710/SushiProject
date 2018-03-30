@@ -2,10 +2,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
-    
-    <!--<security-role><role-name>Admin</role-name></security-role>-->
-    <!--<security-role><role-name>User</role-name></security-role>-->
-    <!--<security-role><role-name>Guest</role-name></security-role>-->
 
     <filter>
         <filter-name>Filter</filter-name>
@@ -28,7 +24,7 @@
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>login.jsp</welcome-file>
+        <welcome-file>/WEB-INF/login.jsp</welcome-file>
     </welcome-file-list>
 
 </web-app>

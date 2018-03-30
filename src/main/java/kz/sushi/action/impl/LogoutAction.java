@@ -2,29 +2,30 @@ package kz.sushi.action.impl;
 
 import kz.sushi.dao.entity.Product;
 import kz.sushi.action.IBasicAction;
+import kz.sushi.service.ProductService;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+import static kz.sushi.util.Constant.*;
+
 public class LogoutAction implements IBasicAction {
-    private static Logger log = Logger.getLogger(LogoutAction.class.getName());
     @Override
     public String execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
-
-        if (session.getAttribute("productList")!=null) {
-            List<Product> productList = (List<Product>) session.getAttribute("productList");
+        List<Product> productList = (List<Product>) session.getAttribute(PRODUCT_LIST);
+        if (productList!=null) {
             productList.clear();
-            session.removeAttribute("productList");
-            session.removeAttribute("totalCost");
-            log.trace("attributes from session are removed");
+            session.removeAttribute(PRODUCT_LIST);
         }
-        session.removeAttribute("role");
-        session.removeAttribute("user");
-        session.removeAttribute("success");
 
-        return "index.jsp";
+        session.removeAttribute(TOTAL_COST);
+        session.removeAttribute(USER_ID);
+        session.removeAttribute(LOGIN);
+        session.removeAttribute(SUCCESS);
+
+        return INDEX_PAGE;
     }
 }

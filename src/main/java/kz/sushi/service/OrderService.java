@@ -3,85 +3,58 @@ package kz.sushi.service;
 import kz.sushi.dao.connectionPool.ConnectionPool;
 import kz.sushi.dao.entity.Orders;
 import kz.sushi.dao.entity.Product;
-import kz.sushi.dao.entity.User;
-import kz.sushi.dao.impl.ItemImpl;
-import kz.sushi.dao.impl.OrdersImpl;
+import kz.sushi.dao.impl.ItemDAO;
+import kz.sushi.dao.impl.OrdersDAO;
 import org.apache.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.sql.Connection;
-import java.util.Iterator;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class OrderService {
     private static Logger log = Logger.getLogger(OrderService.class.getName());
+    private List<Orders> ordersList;
 
-    public String createOrder (HttpServletRequest request) {
+    public List<Orders> getOrdersList() {
+        return ordersList;
+    }
+
+    public void createOrder (List<Product> productList, int userId, int totalCost) {
+        ProductService productService = new ProductService();
         Connection connection = ConnectionPool.getInstance().getConnection();
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        List<Product> productList = (List<Product>) session.getAttribute("productList");
-        Locale locale = (Locale) session.getAttribute("locale");
-        ResourceBundle bundle = ResourceBundle.getBundle("locale", locale);
         try {
-            ItemImpl itemImpl = new ItemImpl(connection);
+            ItemDAO itemDAO = new ItemDAO(connection);
             if (!productList.isEmpty()) {
-                int totalCost = (int) session.getAttribute("totalCost");
-                OrdersImpl ordersImpl = new OrdersImpl(connection);
-                ordersImpl.addToOrders(user.getId(), totalCost, new java.util.Date());
-
+                OrdersDAO ordersDAO = new OrdersDAO(connection);
+                ordersDAO.addToOrders(userId, totalCost, new java.util.Date());
                 log.trace("add to orders");
 
-                List<Orders> ordersList = ordersImpl.findAll();
+                List<Orders> ordersList = ordersDAO.findAll();
                 Orders lastElem = ordersList.get(ordersList.size()-1);
-                Iterator<Product> itProd = productList.iterator();
-                while (itProd.hasNext()) {
-                    Product prod = itProd.next();
-                    itemImpl.addToItem(prod.getId(), lastElem.getId());
+                for (Product prod : productList) {
+                    itemDAO.addToItem(prod.getId(), lastElem.getId());
                     log.trace("add product to item");
                 }
                 productList.clear();
                 ordersList.clear();
-                session.removeAttribute("totalCost");
-
-                if (session.getAttribute("success")==null) {
-                    session.setAttribute("success", bundle.getString("basket.success"));
-                }
-                return "basket.jsp";
-            } else {
-                return "basket.jsp";
+                productService.setTotalCost(0);
             }
+        } catch (SQLException e) {
+            log.error(e);
         } finally {
             ConnectionPool.getInstance().returnConnection(connection);
         }
     }
 
-    public String showOrders(HttpServletRequest request) {
-        String page;
+    public void showOrders() {
         Connection connection = ConnectionPool.getInstance().getConnection();
-        HttpSession session = request.getSession();
-        List<Orders> ordersList = (List<Orders>) session.getAttribute("ordersList");
         try {
-            OrdersImpl ordersImpl = new OrdersImpl(connection);
-            if (ordersList!=null) {
-                ordersList.clear();
-                session.removeAttribute("ordersList");
-                page =  "admin-cabinet.jsp";
-                log.trace("orderlist != null. remove attribute 'orderlist' from session");
-            } else {
-                ordersList = ordersImpl.findAll();
-                session.setAttribute("ordersList", ordersList);
-                page = "admin-cabinet.jsp";
-                log.trace("show order list");
-            }
-            return page;
+            OrdersDAO ordersDAO = new OrdersDAO(connection);
+            ordersList = ordersDAO.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
         } finally {
             ConnectionPool.getInstance().returnConnection(connection);
         }
-
     }
-
 }

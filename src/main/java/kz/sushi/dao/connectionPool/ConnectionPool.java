@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ConnectionPool {
@@ -17,7 +18,7 @@ public class ConnectionPool {
     private static final int MAX_CONN = Integer.parseInt(resourceBundle.getString("maxConn"));
 
     private static ConnectionPool instance;
-    private ArrayList<Connection> freeConnections = new ArrayList<>(MAX_CONN);
+    List<Connection> freeConnections = new ArrayList<>(MAX_CONN);
 
     public static ConnectionPool getInstance() {
         if (instance == null)

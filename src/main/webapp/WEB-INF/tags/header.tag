@@ -12,39 +12,55 @@
 <fmt:setBundle basename="locale"/>
 <header class="header">
     <div class="infoRow">
-        <div class="description">
-            <a href="index.jsp" class="sushiName">
-                <fmt:message key="header.mainMenu"/>
-            </a>
-            <div class="telNumber">
-                <fmt:message key="header.tel"/>
+        <div class="indexPageDiv">
+            <div class="headerBtnDiv">
+                <form action="Controller" method="post">
+                    <input type="hidden" name="action" value="indexPage"/>
+                    <button class="headerBtn" type="submit">
+                        <fmt:message key="header.mainMenu"/>
+                    </button>
+                </form>
             </div>
         </div>
 
-        <div class="basket-login-block">
-            <span class="guestMesg">
+        <span class="guestMesg">
                 <fmt:message key="index.guestMesg"/>
-            </span>
+        </span>
 
+        <div class="basket-login-block">
             <div class="logReg-index">
-                <a class="logReg" href="login.jsp">
-                    <fmt:message key="header.login"/><br>
-                </a>
-                <a class="logReg" id="logReg-id" href="registration.jsp">
-                    <fmt:message key="header.registration"/>
-                </a>
+                <form action="Controller" method="post">
+                    <input type="hidden" name="action" value="loginPage"/>
+                    <button class="headerBtn" type="submit">
+                        <fmt:message key="header.login"/><br>
+                    </button>
+                </form>
+                <form action="Controller" method="post">
+                    <input type="hidden" name="action" value="registrationPage"/>
+                    <button class="headerBtn" type="submit">
+                        <fmt:message key="header.registration"/>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
+
     <div class="menuRow">
-        <div class="product-menuRow">
-            <a href="rolls.jsp" class="rolls-menuRow">
-                <fmt:message key="header.rolls"/>
-            </a>
-            <a href="sets.jsp" class="sets-menuRow">
-                <fmt:message key="header.sets"/>
-            </a>
+        <div class="headerBtnDiv">
+            <form action="Controller" method="post">
+                <input type="hidden" name="action" value="rollsPage"/>
+                <button class="headerBtn" type="submit">
+                    <fmt:message key="header.rolls"/>
+                </button>
+            </form>
         </div>
-        <link type= "text/css" rel="stylesheet" href="../assets/css/style.css"/>
+        <div class="headerBtnDiv">
+            <form action="Controller" method="post">
+                <input type="hidden" name="action" value="setsPage"/>
+                <button class="headerBtn" type="submit">
+                    <fmt:message key="header.sets"/>
+                </button>
+            </form>
+        </div>
     </div>
 </header>

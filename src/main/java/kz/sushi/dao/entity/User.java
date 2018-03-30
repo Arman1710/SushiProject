@@ -8,7 +8,7 @@ public class User extends Basic {
     private String address;
     private String phone;
     private Date birthday;
-    private Role role;
+    private int user_role_id;
     private String password;
 
     public User(String login, String email, String phone, Date birthday, Role role, String password) {
@@ -16,7 +16,7 @@ public class User extends Basic {
         this.email = email;
         this.phone = phone;
         this.birthday = birthday;
-        this.role = role;
+        this.user_role_id = user_role_id;
         this.password = password;
     }
 
@@ -64,13 +64,12 @@ public class User extends Basic {
         this.email = email;
     }
 
-    public Role getRole() {
-        return role;
+    public int getUser_role_id() {
+        return user_role_id;
     }
 
-    public Role setRole(Role role) {
-        this.role = role;
-        return role;
+    public void setUser_role_id(int user_role_id) {
+        this.user_role_id = user_role_id;
     }
 
     public String getPassword() {
@@ -88,12 +87,12 @@ public class User extends Basic {
     @Override
     public String toString() {
         return "User{" +
-                "login='" + login + '\'' +
+                "logIn='" + login + '\'' +
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 ", phone='" + phone + '\'' +
                 ", birthday='" + birthday + '\'' +
-                ", role=" + role +
+                ", role=" + user_role_id +
                 ", password='" + password + '\'' +
                 '}';
     }

@@ -1,61 +1,57 @@
 package kz.sushi.action.impl;
 
-import kz.sushi.dao.connectionPool.ConnectionPool;
-import kz.sushi.dao.impl.UserImpl;
-import kz.sushi.dao.entity.User;
 import kz.sushi.action.IBasicAction;
+import kz.sushi.service.UserService;
 import kz.sushi.util.ProductsView;
-import kz.sushi.util.PswHash;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.Connection;
-import java.util.Objects;
+import java.util.Locale;
+
+import static kz.sushi.util.Constant.*;
 
 public class LoginAction implements IBasicAction {
     private static Logger log = Logger.getLogger(LoginAction.class.getName());
-    private String page="";
+    private String page = "";
+
     @Override
     public String execute(HttpServletRequest request) {
-        Connection connection = ConnectionPool.getInstance().getConnection();
         HttpSession session = request.getSession();
-        PswHash pswHash = new PswHash();
-        ProductsView allProd = new ProductsView();
-        allProd.addAllProd(session);
+        Locale locale = (Locale) session.getAttribute(LOCALE);
 
-        String login = request.getParameter("login");
-        String password = request.getParameter("password");
+        ProductsView productsView = new ProductsView();
+        productsView.addProdToSession(session, locale);
 
-        try {
-            UserImpl userImpl = new UserImpl(connection);
-            User user = userImpl.findByLoginAndPsw(login, pswHash.md5Hash(password));
-            String userRole = String.valueOf(user.getRole());
+        String login = request.getParameter(LOGIN);
+        String password = request.getParameter(PASSWORD);
 
-            if (Objects.equals(userRole, "ADMIN")) {
-                session.removeAttribute("loginError");
-                session.setAttribute("user", user);
-                session.setAttribute("role", user.getRole());
-                page = "admin-cabinet.jsp";
-                log.trace("Role is ADMIN");
-            }
-            if (Objects.equals(userRole, "USER")) {
-                session.removeAttribute("loginError");
-                session.setAttribute("user", user);
-                session.setAttribute("role", user.getRole());
-                page = "user-index.jsp";
-                log.trace("Role is USER");
-            }
+        UserService userService = new UserService();
+        userService.logIn(login, password);
+        int userRoleId = userService.getUserRoleId();
+        int userId = userService.getUserId();
+        String userlogin = userService.getUserlogin();
 
-            if (Objects.equals(userRole, "null")) {
-                session.setAttribute("loginError", "Unknown login or password, try again!");
-                page = "login.jsp";
-                log.trace("Login error. Role is null");
-            }
-        } finally {
-            ConnectionPool.getInstance().returnConnection(connection);
+        if (userRoleId == ADMIN_ROLE) {
+            session.removeAttribute(LOGIN_ERROR);
+            session.setAttribute(LOGIN, userlogin);
+            session.setAttribute(USER_ID, userId);
+            page = ADMIN_CABINET_PAGE;
+            log.trace("Role is ADMIN");
+        }
+        if (userRoleId == USER_ROLE) {
+            session.removeAttribute(LOGIN_ERROR);
+            session.setAttribute(LOGIN, userlogin);
+            session.setAttribute(USER_ID, userId);
+            page = USER_INDEX_PAGE;
+            log.trace("Role is USER");
         }
 
+        if (userRoleId == 0) {
+            session.setAttribute(LOGIN_ERROR, LOGIN_ERROR);
+            page = LOGIN_PAGE;
+            log.trace("Login error. Role is null");
+        }
         return page;
     }
 }
