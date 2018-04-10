@@ -1,0 +1,7 @@
+User
+login -    user
+password - user
+
+Admin
+login -    admin
+password - admin
