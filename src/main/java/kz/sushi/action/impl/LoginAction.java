@@ -29,20 +29,17 @@ public class LoginAction implements IBasicAction {
         UserService userService = new UserService();
         userService.logIn(login, password);
         int userRoleId = userService.getUserRoleId();
-        int userId = userService.getUserId();
         String userlogin = userService.getUserlogin();
 
         if (userRoleId == ADMIN_ROLE) {
             session.removeAttribute(LOGIN_ERROR);
             session.setAttribute(LOGIN, userlogin);
-            session.setAttribute(USER_ID, userId);
             page = ADMIN_CABINET_PAGE;
             log.trace("Role is ADMIN");
         }
         if (userRoleId == USER_ROLE) {
             session.removeAttribute(LOGIN_ERROR);
             session.setAttribute(LOGIN, userlogin);
-            session.setAttribute(USER_ID, userId);
             page = USER_INDEX_PAGE;
             log.trace("Role is USER");
         }

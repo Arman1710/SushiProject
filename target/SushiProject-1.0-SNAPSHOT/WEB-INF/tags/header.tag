@@ -14,7 +14,7 @@
     <div class="infoRow">
         <div class="indexPageDiv">
             <div class="headerBtnDiv">
-                <form action="Controller" method="post">
+                <form action="Controller" method="get">
                     <input type="hidden" name="action" value="indexPage"/>
                     <button class="headerBtn" type="submit">
                         <fmt:message key="header.mainMenu"/>
@@ -29,13 +29,13 @@
 
         <div class="basket-login-block">
             <div class="logReg-index">
-                <form action="Controller" method="post">
+                <form action="Controller" method="get">
                     <input type="hidden" name="action" value="loginPage"/>
                     <button class="headerBtn" type="submit">
                         <fmt:message key="header.login"/><br>
                     </button>
                 </form>
-                <form action="Controller" method="post">
+                <form action="Controller" method="get">
                     <input type="hidden" name="action" value="registrationPage"/>
                     <button class="headerBtn" type="submit">
                         <fmt:message key="header.registration"/>
@@ -47,7 +47,7 @@
 
     <div class="menuRow">
         <div class="headerBtnDiv">
-            <form action="Controller" method="post">
+            <form action="Controller" method="get">
                 <input type="hidden" name="action" value="rollsPage"/>
                 <button class="headerBtn" type="submit">
                     <fmt:message key="header.rolls"/>
@@ -55,7 +55,7 @@
             </form>
         </div>
         <div class="headerBtnDiv">
-            <form action="Controller" method="post">
+            <form action="Controller" method="get">
                 <input type="hidden" name="action" value="setsPage"/>
                 <button class="headerBtn" type="submit">
                     <fmt:message key="header.sets"/>

@@ -1,13 +1,13 @@
 package kz.sushi.service;
 
-import kz.sushi.dao.connectionPool.ConnectionPool;
 import kz.sushi.dao.entity.Orders;
 import kz.sushi.dao.entity.Product;
+import kz.sushi.dao.entity.User;
 import kz.sushi.dao.impl.ItemDAO;
 import kz.sushi.dao.impl.OrdersDAO;
+import kz.sushi.dao.impl.UserDAO;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -19,14 +19,15 @@ public class OrderService {
         return ordersList;
     }
 
-    public void createOrder (List<Product> productList, int userId, int totalCost) {
+    public void createOrder (List<Product> productList, String login, int totalCost) {
         ProductService productService = new ProductService();
-        Connection connection = ConnectionPool.getInstance().getConnection();
         try {
-            ItemDAO itemDAO = new ItemDAO(connection);
+            ItemDAO itemDAO = new ItemDAO();
             if (!productList.isEmpty()) {
-                OrdersDAO ordersDAO = new OrdersDAO(connection);
-                ordersDAO.addToOrders(userId, totalCost, new java.util.Date());
+                UserDAO userDAO = new UserDAO();
+                User user = userDAO.findUserByLogin(login);
+                OrdersDAO ordersDAO = new OrdersDAO();
+                ordersDAO.addToOrders(user.getId(), totalCost, new java.util.Date());
                 log.trace("add to orders");
 
                 List<Orders> ordersList = ordersDAO.findAll();
@@ -41,20 +42,15 @@ public class OrderService {
             }
         } catch (SQLException e) {
             log.error(e);
-        } finally {
-            ConnectionPool.getInstance().returnConnection(connection);
         }
     }
 
     public void showOrders() {
-        Connection connection = ConnectionPool.getInstance().getConnection();
         try {
-            OrdersDAO ordersDAO = new OrdersDAO(connection);
+            OrdersDAO ordersDAO = new OrdersDAO();
             ordersList = ordersDAO.findAll();
         } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            ConnectionPool.getInstance().returnConnection(connection);
+            log.error(e);
         }
     }
 }

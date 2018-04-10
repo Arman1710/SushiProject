@@ -16,11 +16,11 @@ public class CheckoutAction implements IBasicAction {
     @Override
     public String execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        int userId = (int) session.getAttribute(USER_ID);
+        String login = (String) session.getAttribute(LOGIN);
         List<Product> productList = (List<Product>) session.getAttribute(PRODUCT_LIST);
         int totalCost = (int) session.getAttribute(TOTAL_COST);
 
-        orderService.createOrder(productList, userId, totalCost);
+        orderService.createOrder(productList, login, totalCost);
         productList.clear();
         session.removeAttribute(TOTAL_COST);
         session.removeAttribute(PRODUCT_LIST);

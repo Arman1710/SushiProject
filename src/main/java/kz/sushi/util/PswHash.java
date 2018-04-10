@@ -1,11 +1,14 @@
 package kz.sushi.util;
 
+import org.apache.log4j.Logger;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class PswHash {
+    private static Logger log = Logger.getLogger(PswHash.class.getName());
     public String md5Hash(String password) {
         byte[] digest = new byte[0];
         try {
@@ -15,7 +18,7 @@ public class PswHash {
             digest = md5.digest();
 
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error(e);
         }
         BigInteger bigInt = new BigInteger(1, digest);
         StringBuilder md5Hex = new StringBuilder(bigInt.toString(16));

@@ -1,5 +1,6 @@
 package kz.sushi.dao.impl;
 
+import kz.sushi.dao.connectionPool.ConnectionPool;
 import kz.sushi.dao.entity.Product;
 import kz.sushi.dao.IProduct;
 
@@ -8,25 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO implements IProduct {
-    final static String PRODUCT_CREATE = "INSERT INTO product (productType_id, name, description, count, cost, id, locale_id, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    final static String PRODUCT_UPDATE = "UPDATE product SET  productType_id=?, name=?, description=?,  count=?, cost=?, image=? WHERE id=? AND locale_id=?";
-    final static String PRODUCT_FIND_BY_ID_LOCALE_ID_PROD_TYPE_ID = "SELECT * FROM product WHERE id=? AND locale_id=? AND productType_id=?";
-    final static String PRODUCT_FIND_BY_LOCALE_ID_PROD_TYPE_ID = "SELECT * FROM product WHERE locale_id=? AND productType_id=?";
-    final static String PRODUCT_DELETE = "DELETE FROM product";
-    final static String PRODUCT_FIND_ALL = "SELECT * FROM product";
+    private final static String PRODUCT_CREATE = "INSERT INTO product (productType_id, name, description, count, cost, id, locale_id, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private final static String PRODUCT_UPDATE = "UPDATE product SET  productType_id=?, name=?, description=?,  count=?, cost=?, image=? WHERE id=? AND locale_id=?";
+    private final static String PRODUCT_FIND_BY_ID_LOCALE_ID_PROD_TYPE_ID = "SELECT * FROM product WHERE id=? AND locale_id=? AND productType_id=?";
+    private final static String PRODUCT_FIND_BY_LOCALE_ID_PROD_TYPE_ID = "SELECT * FROM product WHERE locale_id=? AND productType_id=?";
+    private final static String PRODUCT_DELETE = "DELETE FROM product";
+    private final static String PRODUCT_FIND_ALL = "SELECT * FROM product";
     private static ProductDAO productDAO;
-    private Connection connection;
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
 
-    public ProductDAO(Connection connection) {
-        this.connection = connection;
-    }
-
-    public static ProductDAO getProductDAO(Connection connection) {
-        if (productDAO == null) productDAO = new ProductDAO(connection);
+    public static ProductDAO getProductDAO() {
+        if (productDAO == null) productDAO = new ProductDAO();
         return productDAO;
     }
-    List<Product> productList = new ArrayList<>();
-    Product product = new Product();
+    private List<Product> productList = new ArrayList<>();
+    private Product product = new Product();
 
     @Override
     public void create(Product product) throws SQLException {
@@ -40,25 +37,32 @@ public class ProductDAO implements IProduct {
 
     @Override
     public void delete(Product product) throws SQLException {
+        Connection connection = connectionPool.getConnection();
         try (PreparedStatement pStatement = connection.prepareStatement(PRODUCT_DELETE)) {
             pStatement.executeUpdate();
+        } finally {
+            connectionPool.returnConnection(connection);
         }
     }
 
     @Override
     public List<Product> findAll() throws SQLException {
+        Connection connection = connectionPool.getConnection();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(PRODUCT_FIND_ALL)) {
             while (resultSet.next()) {
                 setToProduct(resultSet);
                 productList.add(product);
             }
+        } finally {
+            connectionPool.returnConnection(connection);
         }
         return productList;
     }
 
     @Override
     public List<Product> findByIdLocIdProdTypeId(String  id, String locale, int type) throws SQLException {
+        Connection connection = connectionPool.getConnection();
         try (PreparedStatement pStatement = connection.prepareStatement(PRODUCT_FIND_BY_ID_LOCALE_ID_PROD_TYPE_ID)) {
             pStatement.setString(1, id);
             pStatement.setString(2, locale);
@@ -68,12 +72,15 @@ public class ProductDAO implements IProduct {
                     setToProduct(resultSet);
                 }
             }
+        } finally {
+            connectionPool.returnConnection(connection);
         }
         return productList;
     }
 
     @Override
     public List<Product> findByLocIdAndProdTypeId(String locale, int prodTypeId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
         List<Product> productList = new ArrayList<>();
         try (PreparedStatement pStatement = connection.prepareStatement(PRODUCT_FIND_BY_LOCALE_ID_PROD_TYPE_ID)) {
             pStatement.setString(1, locale);
@@ -84,6 +91,8 @@ public class ProductDAO implements IProduct {
                     productList.add(product);
                 }
             }
+        } finally {
+            connectionPool.returnConnection(connection);
         }
         return productList;
     }
@@ -102,6 +111,7 @@ public class ProductDAO implements IProduct {
     }
 
     private void setToPStatement (Product product, String sqlCommand) throws SQLException{
+        Connection connection = connectionPool.getConnection();
         try (PreparedStatement pStatement = connection.prepareStatement(sqlCommand)) {
             pStatement.setInt(1, product.getProdTypeId());
             pStatement.setString(2, product.getName());
@@ -112,6 +122,8 @@ public class ProductDAO implements IProduct {
             pStatement.setInt(7, product.getLocaleId());
             pStatement.setString(8, product.getImage());
             pStatement.executeUpdate();
+        } finally {
+            connectionPool.returnConnection(connection);
         }
     }
 }

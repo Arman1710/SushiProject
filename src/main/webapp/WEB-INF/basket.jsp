@@ -55,7 +55,9 @@
                 </c:forEach>
                 </tbody>
             </table>
-            <fmt:message key="basket.totalCost"/> : ${totalCost} <fmt:message key="tenge"/>
+            <c:if test="${not empty totalCost}">
+                <fmt:message key="basket.totalCost"/> : ${totalCost} <fmt:message key="tenge"/>
+            </c:if>
             <c:if test="${not empty productList}">
                 <form action="Controller" method="post">
                     <input type="hidden" name="action" value="checkout"/>

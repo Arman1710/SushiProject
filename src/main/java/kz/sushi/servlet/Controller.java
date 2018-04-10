@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class Controller extends HttpServlet  {
     private static Logger log = Logger.getLogger(Controller.class.getName());
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             request.setCharacterEncoding("UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -33,7 +33,4 @@ public class Controller extends HttpServlet  {
         dispatcher.forward(request, response);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
 }

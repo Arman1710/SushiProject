@@ -1,10 +1,11 @@
 package kz.sushi.action.impl;
 
 import kz.sushi.action.IBasicAction;
+import kz.sushi.dao.entity.User;
 import kz.sushi.exception.WrongInputDataException;
 import kz.sushi.service.UserService;
 import kz.sushi.util.ProductsView;
-import kz.sushi.util.Validator;
+import kz.sushi.util.PswHash;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import static kz.sushi.util.Constant.*;
@@ -20,8 +20,8 @@ import static kz.sushi.util.Validator.getErrorMsg;
 
 public class RegistrationAction implements IBasicAction {
     private static Logger log = Logger.getLogger(RegistrationAction.class.getName());
-    private UserService userService = new UserService();
-    String page = REGISTRATION_PAGE;
+
+    String page;
     @Override
     public String execute(HttpServletRequest request) {
 
@@ -45,19 +45,28 @@ public class RegistrationAction implements IBasicAction {
         ProductsView productsView = new ProductsView();
         productsView.addProdToSession(session,locale);
 
+
+        UserService userService = new UserService();
         try {
-            if (userService.createUser(login, password, email, address, phone, birthdayDate)) {
+            User user = new User();
+            PswHash pswHash = new PswHash();
+            user.setLogin(login);
+            user.setPassword(pswHash.md5Hash(password));
+            user.setEmail(email);
+            user.setPhone(phone);
+            user.setAddress(address);
+            user.setBirthday(birthdayDate);
+            user.setUser_role_id(USER_ROLE);
+            if (userService.createUser(user)) {
                 session.setAttribute(LOGIN, login);
-                session.setAttribute(USER_ID, userService.getUserId());
                 session.removeAttribute(ERROR_MESSAGE);
                 page = USER_INDEX_PAGE;
-            } else {
-                session.setAttribute(ERROR_MESSAGE, getErrorMsg());
             }
         } catch (WrongInputDataException e) {
             log.error(e);
+            session.setAttribute(ERROR_MESSAGE, getErrorMsg());
+            page = REGISTRATION_PAGE;
         }
-
 
         return page;
     }

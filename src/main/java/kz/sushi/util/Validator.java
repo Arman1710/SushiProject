@@ -22,45 +22,45 @@ public class Validator {
         return errorMsg;
     }
 
-    public boolean checkInputData (String login, String password, String email, String address, String phone) throws WrongInputDataException, SQLException {
+    public static void setErrorMsg(String errorMsg) {
+        Validator.errorMsg = errorMsg;
+    }
 
-        if (login.isEmpty() || password.isEmpty() || address.isEmpty() || phone.isEmpty()) {
-            errorMsg = "emptyFieldsError";
+    public boolean checkInputData (User user) throws WrongInputDataException, SQLException {
+        errorMsg = null;
+
+        if (user.getLogin().isEmpty() || user.getPassword().isEmpty() || user.getAddress().isEmpty() || user.getPhone().isEmpty()) {
+             setErrorMsg("emptyFieldsError");
             throw new WrongInputDataException("empty fields");
         }
 
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-        Matcher matcher = pattern.matcher(email);
+        Matcher matcher = pattern.matcher(user.getEmail());
         if (!matcher.matches()) {
             errorMsg = "notCorrectEmail";
             throw new WrongInputDataException("notCorrectEmail");
         }
 
-        if (!isNumeric(phone)) {
+        if (!isNumeric(user.getPhone())) {
             errorMsg = "isNumericError";
             throw new WrongInputDataException("phone is not numeric");
         }
 
-        if (userIsExists(login)) {
+        if (userIsExists(user.getLogin())) {
             errorMsg = "userExistsError";
             throw new WrongInputDataException("user is already exists");
         }
         return isValid();
     }
 
-    public boolean isValid () {
-        return errorMsg==null;
+    private boolean isValid() {
+        return errorMsg == null;
     }
 
     private boolean userIsExists(String login) throws SQLException {
-        Connection connection = ConnectionPool.getInstance().getConnection();
-        try {
-            UserDAO userDAO = new UserDAO(connection);
-            User user = userDAO.findUserByLogin(login);
-            return (Objects.equals(user.getLogin(), login));
-        } finally {
-            ConnectionPool.getInstance().returnConnection(connection);
-        }
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.findUserByLogin(login);
+        return (Objects.equals(user.getLogin(), login));
     }
 
     private boolean isNumeric (String phone) {

@@ -32,7 +32,7 @@
               <div class="product-container">
                   <div class="product-image">
                       <div class="headerBtnDiv">
-                          <form action="Controller" method="post">
+                          <form action="Controller" method="get">
                               <input type="hidden" name="action" value="rollsPage"/>
                               <button class="headerBtn" type="submit">
                                   <img src="/images/rolls.png" style="height:150px; width:200px">
@@ -45,7 +45,7 @@
               <div class="product-container">
                   <div class="product-image">
                       <div class="headerBtnDiv">
-                          <form action="Controller" method="post">
+                          <form action="Controller" method="get">
                               <input type="hidden" name="action" value="setsPage"/>
                               <button class="headerBtn" type="submit">
                                   <img src="/images/sets.png" style="height:150px; width:200px">

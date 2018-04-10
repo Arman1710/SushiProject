@@ -18,9 +18,9 @@ public class ConnectionPool {
     private static final int MAX_CONN = Integer.parseInt(resourceBundle.getString("maxConn"));
 
     private static ConnectionPool instance;
-    List<Connection> freeConnections = new ArrayList<>(MAX_CONN);
+    private List<Connection> freeConnections = new ArrayList<>(MAX_CONN);
 
-    public static ConnectionPool getInstance() {
+    public static synchronized ConnectionPool getInstance() {
         if (instance == null)
             instance = new ConnectionPool() ;
         return instance;

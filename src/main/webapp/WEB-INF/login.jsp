@@ -19,7 +19,7 @@
     <div class="backside" style="background-image: url(../images/loginBG.jpg)">
         <div class="block">
             <div class="langForm">
-                <form action="Controller" method="post">
+                <form action="Controller" method="get">
                     <input type="hidden" name="action" value="changeLocale"/>
                     <c:choose>
                         <c:when test="${sessionScope.locale.toString() == 'ru_KZ'}">
@@ -62,13 +62,13 @@
                 </div>
             </form>
             <div class="login">
-            <form action="Controller" method="post">
+            <form action="Controller" method="get">
                 <input type="hidden" name="action" value="registrationPage"/>
                 <button class="logRegBtn" type="submit">
                     <fmt:message key="registration"/>
                 </button>
             </form>
-                <form action="Controller" method="post">
+                <form action="Controller" method="get">
                     <input type="hidden" name="action" value="loginLikeGuest"/>
                     <button class="logRegBtn" type="submit" >
                         <fmt:message key="login.guestMode"/>

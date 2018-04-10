@@ -1,5 +1,6 @@
 package kz.sushi.dao.impl;
 
+import kz.sushi.dao.connectionPool.ConnectionPool;
 import kz.sushi.dao.entity.User;
 import kz.sushi.dao.IUser;
 
@@ -8,20 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO implements IUser {
-    final static String USER_CREATE = "INSERT INTO user (logIn, email, address, phone_number, birthday, user_role_id, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    final static String USER_UPDATE = "UPDATE user  SET name=?, email=?, address=?, phone_number=?, birthday=?, user_role_id=?, password=? WHERE id=?";
-    final static String USER_DELETE = "DELETE FROM user";
-    final static String USER_FIND_ALL = "SELECT * FROM user";
-    final static String USER_FIND_BY_LOGIN_PSW = "SELECT * FROM user  WHERE login=? AND password=?";
-    final static String USER_FIND_BY_LOGIN = "SELECT * FROM user WHERE login=?";
+    private final static String USER_CREATE = "INSERT INTO user (logIn, email, address, phone_number, birthday, user_role_id, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private final static String USER_UPDATE = "UPDATE user  SET name=?, email=?, address=?, phone_number=?, birthday=?, user_role_id=?, password=? WHERE id=?";
+    private final static String USER_DELETE = "DELETE FROM user";
+    private final static String USER_FIND_ALL = "SELECT * FROM user";
+    private final static String USER_FIND_BY_LOGIN_PSW = "SELECT * FROM user  WHERE login=? AND password=?";
+    private final static String USER_FIND_BY_LOGIN = "SELECT * FROM user WHERE login=?";
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
 
-    private Connection connection;
-
-    public UserDAO(Connection connection) {
-        this.connection = connection;
-    }
-
-    List<User> userList = new ArrayList<>();
+    private List<User> userList = new ArrayList<>();
 
     @Override
     public void create(User user) throws SQLException {
@@ -35,13 +31,17 @@ public class UserDAO implements IUser {
 
     @Override
     public void delete(User user) throws SQLException {
+        Connection connection = connectionPool.getConnection();
         try (PreparedStatement pStatement = connection.prepareStatement(USER_DELETE)) {
             pStatement.executeUpdate();
+        } finally {
+            connectionPool.returnConnection(connection);
         }
     }
 
     @Override
     public List<User> findAll() throws SQLException {
+        Connection connection = connectionPool.getConnection();
         User user = new User();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(USER_FIND_ALL)) {
@@ -49,6 +49,8 @@ public class UserDAO implements IUser {
                 setToUser(resultSet, user);
                 userList.add(user);
             }
+        } finally {
+            connectionPool.returnConnection(connection);
         }
         return userList;
     }
@@ -56,6 +58,7 @@ public class UserDAO implements IUser {
 
     @Override
     public User findByLoginAndPsw(String login, String password) throws SQLException {
+        Connection connection = connectionPool.getConnection();
         User user = new User();
         try (PreparedStatement pStatement = connection.prepareStatement(USER_FIND_BY_LOGIN_PSW)) {
             pStatement.setString(1, login);
@@ -65,12 +68,15 @@ public class UserDAO implements IUser {
                     setToUser(resultSet, user);
                 }
             }
+        } finally {
+            connectionPool.returnConnection(connection);
         }
         return user;
     }
 
     @Override
     public User findUserByLogin(String login) throws SQLException {
+        Connection connection = connectionPool.getConnection();
         User user = new User();
         try (PreparedStatement pStatement = connection.prepareStatement(USER_FIND_BY_LOGIN)) {
             pStatement.setString(1, login);
@@ -78,6 +84,8 @@ public class UserDAO implements IUser {
                 while (resultSet.next()) {
                     setToUser(resultSet, user);
                 }
+            } finally {
+                connectionPool.returnConnection(connection);
             }
             return user;
         }
@@ -95,6 +103,7 @@ public class UserDAO implements IUser {
     }
 
     private void setToPStatement (User user, String sqlCommand) throws SQLException {
+        Connection connection = connectionPool.getConnection();
         try (PreparedStatement pStatement = connection.prepareStatement(sqlCommand)) {
             pStatement.setString(1, user.getLogin());
             pStatement.setString(2, user.getEmail());
@@ -104,6 +113,8 @@ public class UserDAO implements IUser {
             pStatement.setInt(6, user.getUser_role_id());
             pStatement.setString(7, user.getPassword());
             pStatement.executeUpdate();
+        } finally {
+            connectionPool.returnConnection(connection);
         }
     }
 }
