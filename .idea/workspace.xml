@@ -6,9 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee992d30-ec09-4935-b8ae-ba487c6549f4" name="Default" comment="new commit">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sushidump.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/users.txt" />
+    <list default="true" id="ee992d30-ec09-4935-b8ae-ba487c6549f4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/SushiProject-1.0-SNAPSHOT/WEB-INF/classes/kz/sushi/dao/connectionPool/ConnectionPool.class" afterPath="$PROJECT_DIR$/target/SushiProject-1.0-SNAPSHOT/WEB-INF/classes/kz/sushi/dao/connectionPool/ConnectionPool.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/SushiProject-1.0-SNAPSHOT/WEB-INF/classes/kz/sushi/exception/WrongInputDataException.class" afterPath="$PROJECT_DIR$/target/SushiProject-1.0-SNAPSHOT/WEB-INF/classes/kz/sushi/exception/WrongInputDataException.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/kz/sushi/dao/connectionPool/ConnectionPool.class" afterPath="$PROJECT_DIR$/target/classes/kz/sushi/dao/connectionPool/ConnectionPool.class" />
@@ -865,7 +863,7 @@
       <workItem from="1523255325729" duration="787000" />
       <workItem from="1523257448462" duration="18022000" />
       <workItem from="1523337434259" duration="1810000" />
-      <workItem from="1523347789044" duration="3631000" />
+      <workItem from="1523347789044" duration="3639000" />
     </task>
     <task id="LOCAL-00001" summary="new commit">
       <created>1522411353114</created>
@@ -909,11 +907,18 @@
       <option name="project" value="LOCAL" />
       <updated>1523351307106</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="new commit">
+      <created>1523351440613</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1523351440613</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="498252000" />
+    <option name="totallyTimeSpent" value="498260000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
